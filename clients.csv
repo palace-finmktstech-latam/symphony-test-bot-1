@@ -1,0 +1,201 @@
+client_id,client_name,is_favourite
+76.214.311-8,Energía Austral Ltda,false
+92.187.389-9,Energía Araucanía Ltda,true
+91.246.791-9,Constructora Andes Ltda,true
+92.815.966-2,Textiles BioChile Ltda,true
+94.937.500-9,Automotriz Litoral SpA,true
+79.668.965-5,Viñedos Austral Ltda,true
+94.211.287-9,Industrias Antofagasta SA,true
+76.724.519-3,Metalúrgica Araucanía SpA,true
+76.894.141-2,Pesquera Araucanía Ltda,true
+78.153.492-0,Acuícola Los Andes SA,true
+77.117.313-5,Metalúrgica Las Condes Ltda,true
+77.717.215-0,Acuícola San Fernando SpA,false
+92.618.573-8,Banco Maipú Ltda,false
+79.647.728-3,Seguros Austral SpA,false
+93.199.520-4,Transportes BioChile SpA,false
+78.414.519-5,Restaurantes San Fernando Ltda,false
+92.644.521-4,Tecnología Chile SpA,false
+78.729.352-3,Acuícola Santiago SpA,false
+93.724.587-0,Consultora Coquimbo Ltda,false
+76.371.683-8,Acuícola del Norte SA,false
+94.915.252-0,Educacional San Fernando Ltda,false
+77.568.358-8,Automotriz Patagonia Ltda,false
+93.414.145-6,Tecnología Patagonia SpA,false
+91.510.935-5,Farmacéutica Coquimbo SpA,false
+93.652.356-3,Seguros Patagonia Ltda,false
+94.640.523-2,Comercial del Valle Ltda,false
+77.257.974-9,Forestal Araucanía SpA,false
+76.562.647-6,Industrias Coquimbo SA,false
+94.322.861-0,Energía BioChile SA,false
+93.461.563-7,Seguros Santiago SpA,false
+77.615.739-4,Aeronáutica del Norte SA,false
+76.124.326-6,Biotecnología Cordillera SA,false
+79.962.440-0,Minera del Norte SA,false
+78.598.279-3,Industrias San Fernando SA,false
+76.650.946-7,Aeronáutica Cordillera SA,false
+77.240.176-9,Industrias Capital SpA,false
+76.335.357-0,Tecnología Santiago Ltda,false
+76.260.827-4,Metalúrgica BioChile SpA,false
+92.973.305-7,Consultora Cordillera SA,false
+91.893.637-5,Forestal Las Condes SpA,false
+79.537.496-9,Energía Los Andes Ltda,false
+94.876.888-6,Editorial del Norte SA,false
+79.916.746-1,Industrias Sur SpA,false
+76.360.386-7,Minera Santiago SA,false
+77.713.997-9,Metalúrgica Chile SA,false
+77.156.691-4,Textiles Sur SpA,false
+79.440.223-0,Servicios Litoral SpA,false
+94.331.471-0,Hoteles Patagonia SpA,false
+76.657.284-5,Tecnología Costa Brava Ltda,false
+94.407.258-0,Banco Patagonia SpA,false
+78.452.353-7,Aeronáutica Araucanía Ltda,false
+77.446.961-4,Hoteles Santiago Ltda,false
+78.246.403-2,Energía Sur SA,false
+92.172.837-9,Industrias Santiago Ltda,false
+77.847.952-6,Aeronáutica Los Andes SA,false
+76.492.684-1,Telecomunicaciones Atacama SpA,false
+79.523.372-9,Servicios Las Condes SpA,false
+91.161.955-3,Constructora San Fernando Ltda,false
+93.551.914-9,Industrias Capital Ltda,false
+91.402.347-1,Biotecnología Cordillera SA,false
+79.243.591-2,Biotecnología Austral SA,false
+78.888.187-1,Industrias Araucanía SpA,false
+78.754.953-7,Inmobiliaria del Norte SA,false
+78.643.456-5,Pesquera Chile Ltda,false
+79.816.553-9,Biotecnología Chile SA,false
+92.351.976-1,Consultora del Norte SA,false
+76.106.505-1,Textiles Chile SA,false
+78.236.837-8,Logística Valparaíso Ltda,false
+92.357.788-1,Energía Austral SA,false
+78.911.330-7,Farmacéutica Las Condes SpA,false
+78.565.285-3,Banco Valparaíso SpA,false
+76.206.797-3,Consultora Araucanía SpA,false
+76.795.181-8,Biotecnología Coquimbo Ltda,false
+78.749.318-6,Energía Litoral SpA,false
+77.685.263-3,Comercial BioChile SpA,false
+91.173.368-1,Servicios BioChile SpA,false
+91.637.346-4,Agrícola Atacama SA,false
+91.662.978-4,Metalúrgica Andes Ltda,false
+76.823.372-8,Automotriz Maipú SA,false
+91.691.413-7,Transportes Coquimbo Ltda,false
+93.771.546-7,Transportes Maipú SpA,false
+93.490.719-2,Aeronáutica Araucanía Ltda,false
+79.811.257-9,Acuícola Austral SA,false
+79.935.660-9,Transportes San Fernando SA,false
+76.311.522-0,Consultora Cordillera Ltda,false
+76.893.151-6,Viñedos Costa Brava SA,false
+92.745.863-4,Constructora del Norte SpA,false
+94.465.717-2,Restaurantes Chile SpA,false
+93.695.703-9,Forestal Sur Ltda,false
+92.350.454-3,Energía Araucanía SA,false
+79.525.680-6,Acuícola San Fernando Ltda,false
+93.685.712-6,Comercial Metropolitana SA,false
+77.603.775-4,Pesquera Chile SA,false
+79.801.767-1,Metalúrgica Patagonia SA,false
+91.699.573-4,Agrícola Cordillera Ltda,false
+76.327.690-9,Automotriz Capital SpA,false
+93.396.401-5,Hoteles Antofagasta SA,false
+93.793.173-3,Banco Maipú SA,false
+94.218.276-3,Forestal Costa Brava Ltda,false
+79.508.766-2,Agrícola Austral SpA,false
+76.152.703-6,Minera Andes Ltda,false
+76.776.547-3,Minera Austral SA,false
+76.949.530-6,Educacional Cordillera SpA,false
+77.846.859-2,Educacional Metropolitana SpA,false
+93.794.504-9,Farmacéutica del Norte SpA,false
+93.137.104-7,Viñedos Santiago SpA,false
+77.632.285-7,Minera Los Andes SpA,false
+92.171.358-6,Acuícola Santiago SA,false
+93.946.184-8,Farmacéutica Atacama SA,false
+93.105.987-2,Metalúrgica Andes SpA,false
+78.569.360-7,Pesquera del Norte SA,false
+77.133.521-3,Telecomunicaciones Antofagasta Ltda,false
+93.688.881-7,Industrias del Norte Ltda,false
+79.383.538-1,Transportes Capital SA,false
+76.425.311-9,Metalúrgica Antofagasta SpA,false
+93.340.412-3,Consultora Valparaíso SA,false
+93.446.218-4,Hoteles Antofagasta SpA,false
+94.426.162-7,Minera Litoral Ltda,false
+93.961.510-7,Telecomunicaciones Austral SpA,false
+78.193.842-0,Comercial Chile Ltda,false
+91.891.160-3,Tecnología Cordillera SpA,false
+92.507.270-4,Minera Chile SA,false
+94.600.278-2,Telecomunicaciones Andes SpA,false
+91.257.124-2,Pesquera del Norte SA,false
+77.241.218-0,Agrícola Chile Ltda,false
+78.564.972-8,Telecomunicaciones Cordillera SpA,false
+77.754.167-7,Telecomunicaciones Santiago SpA,false
+78.250.390-6,Forestal Atacama SpA,false
+78.230.903-1,Agrícola Atacama SpA,false
+78.308.647-0,Acuícola Metropolitana Ltda,false
+94.348.414-2,Energía Patagonia SA,false
+79.372.464-0,Telecomunicaciones Las Condes Ltda,false
+93.509.495-5,Banco Antofagasta Ltda,false
+78.266.175-2,Educacional Andes SA,false
+76.691.466-8,Editorial Patagonia SA,false
+76.914.241-6,Inmobiliaria Andes SA,false
+77.487.880-5,Constructora Maipú SA,false
+92.570.680-7,Editorial Chile SA,false
+79.559.494-1,Consultora Santiago SA,false
+94.155.635-7,Consultora del Valle Ltda,false
+77.721.157-7,Hoteles Patagonia SA,false
+94.693.347-7,Banco Araucanía SpA,false
+76.384.233-0,Servicios Antofagasta Ltda,false
+91.377.551-3,Banco Atacama Ltda,false
+92.644.361-4,Agrícola Chile SpA,false
+78.488.179-1,Viñedos Maipú Ltda,false
+94.743.205-2,Seguros del Valle SA,false
+76.816.712-9,Comercial Litoral SA,false
+77.848.114-2,Metalúrgica Metropolitana SA,false
+77.837.353-9,Industrias Austral SA,false
+76.380.310-6,Farmacéutica del Valle SpA,false
+92.570.549-7,Acuícola Maipú Ltda,false
+94.125.339-7,Minera del Valle Ltda,false
+76.559.871-1,Minera Valparaíso SpA,false
+93.212.347-2,Minera Coquimbo SA,false
+77.606.252-0,Farmacéutica Coquimbo Ltda,false
+93.225.304-1,Minera Valparaíso SpA,false
+94.760.570-5,Aeronáutica del Valle SA,false
+94.119.537-7,Banco San Fernando SpA,false
+94.529.483-5,Automotriz Cordillera SA,false
+94.574.107-9,Hoteles Santiago SA,false
+78.763.586-2,Logística Capital SA,false
+79.650.422-6,Constructora Araucanía SpA,false
+79.434.355-2,Aeronáutica Araucanía Ltda,false
+78.419.146-1,Telecomunicaciones San Fernando SA,false
+79.658.750-5,Inmobiliaria Araucanía Ltda,false
+77.986.371-6,Transportes Litoral SpA,false
+79.418.188-2,Agrícola BioChile SA,false
+76.943.130-6,Telecomunicaciones del Norte SA,false
+78.923.738-9,Pesquera Cordillera SA,false
+91.752.589-4,Consultora San Fernando SA,false
+76.542.900-5,Servicios Litoral SpA,false
+76.534.474-2,Servicios Austral SA,false
+79.501.125-9,Consultora Cordillera SpA,false
+94.332.582-8,Banco Atacama Ltda,false
+79.208.904-8,Metalúrgica Litoral SA,false
+79.941.232-7,Transportes del Norte Ltda,false
+91.728.464-3,Minera Maipú SA,false
+92.815.820-0,Telecomunicaciones del Norte SpA,false
+94.484.585-6,Editorial Santiago SpA,false
+76.962.432-7,Viñedos Valparaíso Ltda,false
+76.704.546-1,Forestal Santiago SA,false
+77.757.464-2,Acuícola BioChile Ltda,false
+77.789.523-9,Acuícola Austral SpA,false
+78.439.626-9,Educacional Capital Ltda,false
+92.893.873-7,Textiles Coquimbo SA,false
+79.102.416-7,Editorial Santiago SA,false
+93.435.919-5,Agrícola Antofagasta SpA,false
+91.501.469-2,Inmobiliaria Austral SpA,false
+79.660.111-8,Automotriz Cordillera Ltda,false
+78.999.205-0,Biotecnología Los Andes SA,false
+93.411.721-0,Hoteles Metropolitana Ltda,false
+76.689.172-4,Industrias BioChile SA,false
+92.990.661-6,Educacional Antofagasta SA,false
+77.664.200-7,Agrícola Coquimbo Ltda,false
+93.571.539-3,Tecnología Araucanía Ltda,false
+77.382.555-3,Minera del Norte Ltda,false
+79.527.687-0,Farmacéutica del Valle Ltda,false
+94.899.428-0,Pesquera del Valle SpA,false
+92.635.589-3,Agrícola Costa Brava SpA,false
