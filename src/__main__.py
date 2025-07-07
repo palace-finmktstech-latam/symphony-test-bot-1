@@ -185,6 +185,35 @@ def create_trades_table(trades, client_name):
     
     return matches
 
+async def get_client_status(client_id):
+    """Fetch client status from the status API."""
+    try:
+        async with aiohttp.ClientSession() as session:
+            url = f"{TRADES_API_BASE_URL}/status/{client_id}"
+            print(f"Calling status API: {url}")
+            
+            async with session.get(url, timeout=10) as response:
+                if response.status == 200:
+                    status = await response.json()
+                    print(f"Retrieved status for client {client_id}: {status.get('status_line', 'Unknown')}")
+                    return status
+                elif response.status == 404:
+                    print(f"No status found for client {client_id}")
+                    return None
+                else:
+                    print(f"Status API returned status {response.status}")
+                    return None
+                    
+    except aiohttp.ClientConnectorError:
+        print("Cannot connect to status API - is it running on port 8001?")
+        return None
+    except asyncio.TimeoutError:
+        print("Status API request timed out")
+        return None
+    except Exception as e:
+        print(f"Error calling status API: {e}")
+        return None
+
 def search_clients(query):
     """Search clients by name and ID."""
     if not query:
@@ -403,6 +432,20 @@ class ClientSelectionFormActivity(FormReplyActivity):
                 
                 await self._messages.send_message(stream_id, response)
                 
+                # Fetch client status
+                print(f"Fetching status for client {selected_client_id}")
+                status = await get_client_status(selected_client_id)
+                
+                if status:
+                    # Display status as traffic lights
+                    status_message = f"""<messageML>
+                        <div style="font-size: 10px; padding: 4px; border-radius: 2px; margin-top: 4px;">
+                            <b>Client Status:</b><br/>
+                            {status['status_line']}
+                        </div>
+                    </messageML>"""
+                    await self._messages.send_message(stream_id, status_message)
+                
                 # Fetch and display trades
                 print(f"Fetching trades for client {selected_client_id}")
                 trades = await get_client_trades(selected_client_id)
@@ -419,7 +462,7 @@ class ClientSelectionFormActivity(FormReplyActivity):
                         </div>
                     </messageML>"""
                     await self._messages.send_message(stream_id, error_message)
-                
+                    
                 # Log the selection for trading workflow
                 print(f"TRADE LOG: User {context.initiator.user.display_name} selected client {selected_client['client_name']} (ID: {selected_client_id})")
             else:
