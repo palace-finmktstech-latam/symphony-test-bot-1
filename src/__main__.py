@@ -55,20 +55,6 @@ def load_clients_from_csv(csv_path="clients.csv"):
             
     except FileNotFoundError:
         print(f"CSV file not found: {csv_path}")
-        # Create sample data for testing
-        CLIENTS = [
-            {'client_id': '12345', 'client_name': 'Juan Pérez', 'is_favourite': True},
-            {'client_id': '67890', 'client_name': 'María García', 'is_favourite': False},
-            {'client_id': '11111', 'client_name': 'Carlos Rodriguez', 'is_favourite': True},
-            {'client_id': '22222', 'client_name': 'Ana Martínez', 'is_favourite': True},
-            {'client_id': '33333', 'client_name': 'José López', 'is_favourite': False},
-            {'client_id': '44444', 'client_name': 'Carmen Sánchez', 'is_favourite': True},
-            {'client_id': '55555', 'client_name': 'Luis Fernández', 'is_favourite': False},
-            {'client_id': '66666', 'client_name': 'Isabel Ruiz', 'is_favourite': True}
-        ]
-        
-        FAVOURITES = [client for client in CLIENTS if client['is_favourite']]
-        print("Using sample client data")
         return False
         
     except Exception as e:
@@ -163,25 +149,30 @@ async def get_client_credit_lines(client_id):
         return None
 
 def create_trades_table(trades, client_name):
-    """Create compact trades table for display."""
+    """Create compact trades table with link-style clickable trade numbers for document download."""
     if not trades:
         return f"""<div style="font-size: 10px; padding: 4px; border-radius: 2px; margin-top: 4px;">
             <b>📊 No trades found for {client_name}</b>
         </div>"""
     
-    # Create compact table
+    # Generate unique form ID
+    import time
+    form_id = f"trades_table_{int(time.time())}"
+    
+    # Create compact table with minimal download buttons
     table_html = f"""<div style="font-size: 9px; padding: 4px; border-radius: 2px; margin-top: 4px;">
         <b style="font-size: 10px;">📊 Last {len(trades)} trade(s) for {client_name}:</b><br/>
+        <form id="{form_id}">
         <table style="width: 100%; font-size: 8px; border-collapse: collapse; margin-top: 2px;">
             <tr>
-                <th style="padding: 1px 3px; border: 1px solid #dee2e6;">Trade#</th>
-                <th style="padding: 1px 3px; border: 1px solid #dee2e6;">Date</th>
-                <th style="padding: 1px 3px; border: 1px solid #dee2e6;">Product</th>
-                <th style="padding: 1px 3px; border: 1px solid #dee2e6;">Dir</th>
-                <th style="padding: 1px 3px; border: 1px solid #dee2e6;">Currency Pair</th>
-                <th style="padding: 1px 3px; border: 1px solid #dee2e6;">Amount</th>
-                <th style="padding: 1px 3px; border: 1px solid #dee2e6;">Price</th>
-                <th style="padding: 1px 3px; border: 1px solid #dee2e6;">Spread</th>
+                <th style="padding: 1px 3px; border: 1px solid #dee2e6; font-size: 7px;">Trade#</th>
+                <th style="padding: 1px 3px; border: 1px solid #dee2e6; font-size: 7px;">Date</th>
+                <th style="padding: 1px 3px; border: 1px solid #dee2e6; font-size: 7px;">Product</th>
+                <th style="padding: 1px 3px; border: 1px solid #dee2e6; font-size: 7px;">Dir</th>
+                <th style="padding: 1px 3px; border: 1px solid #dee2e6; font-size: 7px;">Currency Pair</th>
+                <th style="padding: 1px 3px; border: 1px solid #dee2e6; font-size: 7px;">Amount</th>
+                <th style="padding: 1px 3px; border: 1px solid #dee2e6; font-size: 7px;">Price</th>
+                <th style="padding: 1px 3px; border: 1px solid #dee2e6; font-size: 7px;">Spread</th>
             </tr>
     """
     
@@ -196,9 +187,13 @@ def create_trades_table(trades, client_name):
         except:
             amount = trade.get('notional_amount', 'N/A')
         
+        # Create minimal download button with just down arrow
+        trade_number = trade.get('trade_number', 'N/A')
+        download_button = f'<button name="trade_doc_{trade_number}" type="action">{trade_number}</button>'
+        
         table_html += f"""
             <tr>
-                <td style="padding: 1px 3px; border: 1px solid #dee2e6;">{trade.get('trade_number', 'N/A')}</td>
+                <td style="padding: 1px 3px; border: 1px solid #dee2e6; font-size: 7px;">{download_button}</td>
                 <td style="padding: 1px 3px; border: 1px solid #dee2e6;">{trade.get('trade_date', 'N/A')}</td>
                 <td style="padding: 1px 3px; border: 1px solid #dee2e6;">{trade.get('product', 'N/A')}</td>
                 <td style="padding: 1px 3px; border: 1px solid #dee2e6; color: {dir_color}; font-weight: bold;">{direction}</td>
@@ -211,9 +206,137 @@ def create_trades_table(trades, client_name):
     
     table_html += """
         </table>
+        </form>
     </div>"""
     
     return table_html
+
+class TradeDocumentActivity(FormReplyActivity):
+    """Handles trade document download requests."""
+    
+    def __init__(self, messages):
+        self._messages = messages
+        super().__init__()
+    
+    def matches(self, context: FormReplyContext) -> bool:
+        # Match forms with trade document requests
+        return context.form_id.startswith("trades_table_")
+    
+    async def on_activity(self, context: FormReplyContext):
+        print(f"TradeDocumentActivity triggered by {context.initiator.user.display_name}")
+        print(f"Form ID: {context.form_id}")
+        print(f"Form values: {context.form_values}")
+        
+        # Extract trade number from form values
+        trade_number = None
+        
+        for key, value in context.form_values.items():
+            print(f"Checking form field: {key} = {value}")
+            
+            if key == "action" and value and value.startswith("trade_doc_"):
+                trade_number = value[10:]  # Remove "trade_doc_" prefix
+                break
+            elif key.startswith("trade_doc_"):
+                trade_number = key[10:]  # Remove "trade_doc_" prefix
+                break
+        
+        print(f"Extracted trade number: {trade_number}")
+        
+        # Get the correct stream ID
+        stream_id = context.source_event.stream.stream_id
+        
+        # Get user's first name
+        user_display_name = context.initiator.user.display_name
+        user_first_name = user_display_name.split()[0] if user_display_name else "there"
+        
+        if trade_number:
+            # Send acknowledgment message with personalized greeting
+            ack_message = f"""<messageML>
+                <div style="font-size: 10px; padding: 4px; border-radius: 2px; border-left: 3px solid #007bff;">
+                    <b>📄 Fetching contract for trade {trade_number}, {user_first_name}...</b>
+                </div>
+            </messageML>"""
+            await self._messages.send_message(stream_id, ack_message)
+            
+            # Download the trade document
+            success = await self._download_and_send_trade_document(stream_id, trade_number, user_first_name)
+            
+            if not success:
+                error_message = f"""<messageML>
+                    <div style="font-size: 10px; padding: 4px; border-radius: 2px; border-left: 3px solid #dc3545;">
+                        <b>❌ Sorry {user_first_name}, contract not found for trade {trade_number}</b><br/>
+                        <i>The trade contract may not be available in our system</i>
+                    </div>
+                </messageML>"""
+                await self._messages.send_message(stream_id, error_message)
+        else:
+            error_message = f"""<messageML>
+                <div style="font-size: 10px; padding: 4px; border-radius: 2px;">
+                    <b>❌ No trade number detected, {user_first_name}</b>
+                </div>
+            </messageML>"""
+            await self._messages.send_message(stream_id, error_message)
+    
+    async def _download_and_send_trade_document(self, stream_id, trade_number, user_first_name):
+        """Download trade document from API and send as attachment with personalized message."""
+        try:
+            async with aiohttp.ClientSession() as session:
+                url = f"{TRADES_API_BASE_URL}/document/{trade_number}"
+                print(f"Calling trade document API: {url}")
+                
+                async with session.get(url, timeout=30) as response:
+                    if response.status == 200:
+                        # Get the file content and filename from response
+                        file_content = await response.read()
+                        
+                        # Try to get filename from Content-Disposition header
+                        content_disposition = response.headers.get('content-disposition', '')
+                        if 'filename=' in content_disposition:
+                            filename = content_disposition.split('filename=')[1].strip('"')
+                        else:
+                            # Fallback to trade number with extension
+                            filename = f"{trade_number}.pdf"
+                        
+                        print(f"Downloaded {len(file_content)} bytes for {filename}")
+                        
+                        # Create a temporary file-like object for the attachment
+                        import io
+                        file_obj = io.BytesIO(file_content)
+                        file_obj.name = filename  # Set the filename attribute
+                        
+                        # Send personalized message with attachment
+                        message_with_doc = f"""<messageML>
+                            <div style="font-size: 10px; padding: 4px; border-radius: 2px; border-left: 3px solid #28a745;">
+                                <b>Here you go {user_first_name}, here is the contract for trade number: {trade_number}</b><br/>
+                                <i>File: {filename} ({len(file_content):,} bytes)</i>
+                            </div>
+                        </messageML>"""
+                        
+                        await self._messages.send_message(
+                            stream_id, 
+                            message_with_doc,
+                            attachment=[file_obj]
+                        )
+                        
+                        print(f"✅ Successfully sent contract {filename} for trade {trade_number} to {user_first_name}")
+                        return True
+                        
+                    elif response.status == 404:
+                        print(f"❌ Contract not found for trade {trade_number}")
+                        return False
+                    else:
+                        print(f"❌ Document API returned status {response.status}")
+                        return False
+                        
+        except aiohttp.ClientConnectorError:
+            print("❌ Cannot connect to document API")
+            return False
+        except asyncio.TimeoutError:
+            print("❌ Document API request timed out")
+            return False
+        except Exception as e:
+            print(f"❌ Error downloading trade contract: {e}")
+            return False
 
 def search_clients(query):
     """Search clients by name and ID."""
@@ -314,15 +437,6 @@ class ClientSearchActivity(CommandActivity):
         # Method 2: Simple "fav" command to show favourites
         if text == "fav":
             return True
-        
-        # Method 3: Any message in #client-lookup room (we'll need to check room name)
-        # For now, let's use a simple approach - check if message looks like a search
-        # (short message, no common conversational words)
-        words = text.split()
-        if len(words) <= 4 and not any(word in text for word in ['hello', 'hola', 'thanks', 'gracias', 'how', 'como', 'please', 'por', 'favor', 'fav']):
-            # Looks like a search query, but make sure it's not a slash command
-            if not text.startswith('@') and len(text) > 1:
-                return True
         
         return False
     
@@ -428,7 +542,6 @@ class ClientSelectionFormActivity(FormReplyActivity):
                 response = f"""<messageML>
                     <div style="font-size: 10px; padding: 6px; border-radius: 2px; border-left: 3px solid #28a745;">
                         <b style="font-size: 11px;">✅ {favourite_star}{selected_client['client_name']} - {selected_client['client_id']}</b><br/>
-                        <i>Ready for trade</i>
                     </div>
                 </messageML>"""
                 
@@ -521,6 +634,9 @@ async def run():
         
         print("Registering ClientSelectionFormActivity...")
         activities.register(ClientSelectionFormActivity(bdk.messages()))
+
+        print("Registering TradeDocumentActivity...")
+        activities.register(TradeDocumentActivity(bdk.messages()))
 
         # Add helpful slash commands
         @activities.slash("/help", description="Show help for client lookup")
