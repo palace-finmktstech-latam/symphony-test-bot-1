@@ -1,0 +1,3 @@
+C:\Users\bencl\Proyectos\Symphony\test-bot-1>env\Scripts\activate
+
+(env) C:\Users\bencl\Proyectos\Symphony\test-bot-1>python -m src

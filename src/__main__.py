@@ -95,13 +95,71 @@ async def get_client_trades(client_id):
                     return None
                     
     except aiohttp.ClientConnectorError:
-        print("Cannot connect to trades API - is it running on port 8000?")
+        print("Cannot connect to trades API - is it running on port 8001?")
         return None
     except asyncio.TimeoutError:
         print("Trades API request timed out")
         return None
     except Exception as e:
         print(f"Error calling trades API: {e}")
+        return None
+
+async def get_client_status(client_id):
+    """Fetch client status from the status API."""
+    try:
+        async with aiohttp.ClientSession() as session:
+            url = f"{TRADES_API_BASE_URL}/status/{client_id}"
+            print(f"Calling status API: {url}")
+            
+            async with session.get(url, timeout=10) as response:
+                if response.status == 200:
+                    status = await response.json()
+                    print(f"Retrieved status for client {client_id}: {status.get('status_line', 'Unknown')}")
+                    return status
+                elif response.status == 404:
+                    print(f"No status found for client {client_id}")
+                    return None
+                else:
+                    print(f"Status API returned status {response.status}")
+                    return None
+                    
+    except aiohttp.ClientConnectorError:
+        print("Cannot connect to status API - is it running on port 8001?")
+        return None
+    except asyncio.TimeoutError:
+        print("Status API request timed out")
+        return None
+    except Exception as e:
+        print(f"Error calling status API: {e}")
+        return None
+
+async def get_client_credit_lines(client_id):
+    """Fetch client credit lines from the credit API."""
+    try:
+        async with aiohttp.ClientSession() as session:
+            url = f"{TRADES_API_BASE_URL}/credit/{client_id}"
+            print(f"Calling credit API: {url}")
+            
+            async with session.get(url, timeout=10) as response:
+                if response.status == 200:
+                    credit = await response.json()
+                    print(f"Retrieved credit lines for client {client_id}: {credit.get('credit_line', 'Unknown')}")
+                    return credit
+                elif response.status == 404:
+                    print(f"No credit lines found for client {client_id}")
+                    return None
+                else:
+                    print(f"Credit API returned status {response.status}")
+                    return None
+                    
+    except aiohttp.ClientConnectorError:
+        print("Cannot connect to credit API - is it running on port 8001?")
+        return None
+    except asyncio.TimeoutError:
+        print("Credit API request timed out")
+        return None
+    except Exception as e:
+        print(f"Error calling credit API: {e}")
         return None
 
 def create_trades_table(trades, client_name):
@@ -156,63 +214,6 @@ def create_trades_table(trades, client_name):
     </div>"""
     
     return table_html
-    """Search clients by name and ID."""
-    if not query:
-        return []
-    
-    query = query.lower().strip()
-    matches = []
-    
-    for client in CLIENTS:
-        client_name_lower = client['client_name'].lower()
-        client_id_lower = client['client_id'].lower()
-        
-        # Split query into terms
-        query_terms = query.split()
-        
-        # Check if all query terms match either name or ID
-        match = True
-        for term in query_terms:
-            if term not in client_name_lower and term not in client_id_lower:
-                match = False
-                break
-        
-        if match:
-            matches.append(client)
-    
-    # Sort matches: favourites first, then by name
-    matches.sort(key=lambda x: (not x['is_favourite'], x['client_name']))
-    
-    return matches
-
-async def get_client_status(client_id):
-    """Fetch client status from the status API."""
-    try:
-        async with aiohttp.ClientSession() as session:
-            url = f"{TRADES_API_BASE_URL}/status/{client_id}"
-            print(f"Calling status API: {url}")
-            
-            async with session.get(url, timeout=10) as response:
-                if response.status == 200:
-                    status = await response.json()
-                    print(f"Retrieved status for client {client_id}: {status.get('status_line', 'Unknown')}")
-                    return status
-                elif response.status == 404:
-                    print(f"No status found for client {client_id}")
-                    return None
-                else:
-                    print(f"Status API returned status {response.status}")
-                    return None
-                    
-    except aiohttp.ClientConnectorError:
-        print("Cannot connect to status API - is it running on port 8001?")
-        return None
-    except asyncio.TimeoutError:
-        print("Status API request timed out")
-        return None
-    except Exception as e:
-        print(f"Error calling status API: {e}")
-        return None
 
 def search_clients(query):
     """Search clients by name and ID."""
@@ -427,6 +428,7 @@ class ClientSelectionFormActivity(FormReplyActivity):
                 response = f"""<messageML>
                     <div style="font-size: 10px; padding: 6px; border-radius: 2px; border-left: 3px solid #28a745;">
                         <b style="font-size: 11px;">✅ {favourite_star}{selected_client['client_name']} - {selected_client['client_id']}</b><br/>
+                        <i>Ready for trade</i>
                     </div>
                 </messageML>"""
                 
@@ -440,11 +442,25 @@ class ClientSelectionFormActivity(FormReplyActivity):
                     # Display status as traffic lights
                     status_message = f"""<messageML>
                         <div style="font-size: 10px; padding: 4px; border-radius: 2px; margin-top: 4px;">
-                            <b>Client Status:</b><br/>
+                            <b>🚦 Client Status:</b><br/>
                             {status['status_line']}
                         </div>
                     </messageML>"""
                     await self._messages.send_message(stream_id, status_message)
+                
+                # Fetch client credit lines
+                print(f"Fetching credit lines for client {selected_client_id}")
+                credit = await get_client_credit_lines(selected_client_id)
+                
+                if credit:
+                    # Display credit lines as traffic lights
+                    credit_message = f"""<messageML>
+                        <div style="font-size: 10px; padding: 4px; border-radius: 2px; margin-top: 4px;">
+                            <b>💳 Credit Lines:</b><br/>
+                            {credit['credit_line']}
+                        </div>
+                    </messageML>"""
+                    await self._messages.send_message(stream_id, credit_message)
                 
                 # Fetch and display trades
                 print(f"Fetching trades for client {selected_client_id}")
@@ -488,7 +504,7 @@ class ClientSelectionFormActivity(FormReplyActivity):
 
 async def run():
     """Main function to configure and run the Client Lookup Bot."""
-    print("Starting Client Lookup Bot for Traders...")
+    print("Starting Enhanced Client Lookup Bot for Traders...")
     
     # Load client data
     load_clients_from_csv("clients.csv")
@@ -510,7 +526,7 @@ async def run():
         @activities.slash("/help", description="Show help for client lookup")
         async def help_command(context: CommandContext):
             help_text = f"""<messageML>
-                <h2>📞 Client Lookup Bot - Help</h2>
+                <h2>📞 Enhanced Client Lookup Bot - Help</h2>
                 
                 <h3>Quick Commands:</h3>
                 <ul>
@@ -525,10 +541,14 @@ async def run():
                     <li>⭐ Favourite clients pinned at top of chat</li>
                     <li>🔍 Searches both name and ID</li>
                     <li>⚡ Ultra-fast selection with buttons</li>
+                    <li>🚦 Client status with traffic lights</li>
+                    <li>💳 Credit line utilization monitoring</li>
+                    <li>📊 Last 5 trades history</li>
                     <li>📋 Use /favourites to refresh the pinned favourites</li>
                 </ul>
                 
                 <p><b>Loaded:</b> {len(CLIENTS)} clients, {len(FAVOURITES)} favourites</p>
+                <p><b>API Status:</b> Connected to {TRADES_API_BASE_URL}</p>
             </messageML>"""
             
             await bdk.messages().send_message(context.stream_id, help_text)
@@ -566,17 +586,50 @@ async def run():
             favourites_message = create_favourites_bar()
             await bdk.messages().send_message(context.stream_id, favourites_message)
 
-        # Auto-send favourites on startup for any room the bot is active in
-        print("Sending initial favourites message...")
-        
-        # Note: In a real implementation, you'd want to send this to specific rooms
-        # For now, we'll let users trigger it with /favourites command
+        @activities.slash("/api", description="Check API connectivity and status")
+        async def api_command(context: CommandContext):
+            """Check API connectivity and show status."""
+            print(f"API check command triggered by {context.initiator.user.display_name}")
+            
+            try:
+                async with aiohttp.ClientSession() as session:
+                    url = f"{TRADES_API_BASE_URL}/health"
+                    async with session.get(url, timeout=5) as response:
+                        if response.status == 200:
+                            health_data = await response.json()
+                            api_message = f"""<messageML>
+                                <div style="font-size: 10px; padding: 6px; border-radius: 2px;">
+                                    <b>✅ API Status: Healthy</b><br/>
+                                    📊 Trades: {health_data.get('total_trades', 'Unknown')}<br/>
+                                    🚦 Statuses: {health_data.get('total_client_statuses', 'Unknown')}<br/>
+                                    💳 Credit Lines: {health_data.get('total_credit_lines', 'Unknown')}<br/>
+                                    🔗 URL: {TRADES_API_BASE_URL}
+                                </div>
+                            </messageML>"""
+                        else:
+                            api_message = f"""<messageML>
+                                <div style="font-size: 10px; padding: 6px; border-radius: 2px;">
+                                    <b>⚠️ API Status: Error {response.status}</b><br/>
+                                    🔗 URL: {TRADES_API_BASE_URL}
+                                </div>
+                            </messageML>"""
+            except Exception as e:
+                api_message = f"""<messageML>
+                    <div style="font-size: 10px; padding: 6px; border-radius: 2px;">
+                        <b>❌ API Status: Unavailable</b><br/>
+                        Error: {str(e)}<br/>
+                        🔗 URL: {TRADES_API_BASE_URL}
+                    </div>
+                </messageML>"""
+            
+            await bdk.messages().send_message(context.stream_id, api_message)
 
         # Start the datafeed loop
         datafeed_loop = bdk.datafeed()
         print("Starting datafeed...")
         print(f"Bot ready! Loaded {len(CLIENTS)} clients with {len(FAVOURITES)} favourites.")
         print("Usage: Type 'find client name' or 'find 12345' to search")
+        print(f"API: {TRADES_API_BASE_URL}")
         await datafeed_loop.start()
 
 
